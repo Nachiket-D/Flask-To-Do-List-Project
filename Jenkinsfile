@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:20.10.8' // Docker image with Docker installed
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Access to host Docker
+        }
+    }
     environment {
         // Specify your Docker image name
         DOCKER_IMAGE = 'flask-crud-app'
@@ -7,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout your code from a version control system (e.g., GitHub)
+                // Checkout your code from GitHub
                 git branch: 'main', url: 'https://github.com/Nachiket-D/Flask-To-Do-List-Project.git'
             }
         }
@@ -30,7 +35,7 @@ pipeline {
     }
     post {
         always {
-            // Optional: Clean up containers after the pipeline finishes
+            // Clean up containers after the pipeline finishes
             sh 'docker container prune -f'
         }
     }
