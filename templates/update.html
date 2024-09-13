@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update To-Do Item</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Update To-Do Item</h1>
+        <form action="/items/update/{{ item_id }}" method="post">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ item['name'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required>{{ item['description'] }}</textarea>
+            </div>
+            <button class="btn submit" type="submit">Update Item</button>
+        </form>
+        <a class="btn back" href="/">Back to List</a>
+    </div>
+</body>
+</html>

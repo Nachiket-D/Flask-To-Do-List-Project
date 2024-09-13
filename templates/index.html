@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <a class="btn" href="/items/create">Add New Item</a>
+        <div class="todo-list">
+            {% for id, item in items.items() %}
+                <div class="todo-item">
+                    <div class="todo-info">
+                        <h2>{{ item['name'] }}</h2>
+                        <p>{{ item['description'] }}</p>
+                    </div>
+                    <div class="todo-actions">
+                        <a class="btn edit" href="/items/update/{{ id }}">Edit</a>
+                        <a class="btn delete" href="/items/delete/{{ id }}">Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
