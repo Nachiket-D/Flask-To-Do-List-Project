@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:20.10.8' // Docker image with Docker installed
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Access to host Docker
-        }
-    }
+    agent any
     environment {
         // Specify your Docker image name
         DOCKER_IMAGE = 'flask-crud-app'
@@ -18,25 +13,25 @@ pipeline {
         }
         stage('Build') {
             steps {
-                // Build Docker image for Flask app
+                // Build Docker image for Flask app using sudo
                 script {
-                    docker.build("${DOCKER_IMAGE}")
+                    sh "sudo docker build -t ${DOCKER_IMAGE} ."
                 }
             }
         }
         stage('Run') {
             steps {
-                // Run Docker container
+                // Run Docker container using sudo
                 script {
-                    docker.image("${DOCKER_IMAGE}").run('-d -p 5000:5000')
+                    sh "sudo docker run -d -p 5000:5000 ${DOCKER_IMAGE}"
                 }
             }
         }
     }
     post {
         always {
-            // Clean up containers after the pipeline finishes
-            sh 'docker container prune -f'
+            // Clean up containers after the pipeline finishes using sudo
+            sh 'sudo docker container prune -f'
         }
     }
 }
