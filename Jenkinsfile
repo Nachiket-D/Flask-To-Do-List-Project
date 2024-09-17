@@ -1,12 +1,11 @@
 pipeline {
     agent {
         docker {
-            image 'docker:20.10.8' // Docker image with Docker installed
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Access to host Docker
+            image 'docker:20.10.8-dind' // Docker image with Docker and necessary tools installed
+            args '-v /var/run/docker.sock:/var/run/docker.sock --privileged' // Privileged mode for DinD
         }
     }
     environment {
-        // Specify your Docker image name
         DOCKER_IMAGE = 'flask-crud-app'
     }
     stages {
