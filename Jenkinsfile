@@ -1,41 +1,26 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:20.10.8-dind' // Docker image with Docker and necessary tools installed
-            args '-v /var/run/docker.sock:/var/run/docker.sock --privileged' // Privileged mode for DinD
-        }
-    }
-    environment {
-        DOCKER_IMAGE = 'flask-crud-app'
-    }
+    agent any
+
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout your code from GitHub
-                git branch: 'main', url: 'https://github.com/Nachiket-D/Flask-To-Do-List-Project.git'
-            }
-        }
         stage('Build') {
             steps {
-                // Build Docker image for Flask app
                 script {
-                    docker.build("${DOCKER_IMAGE}")
+                    // Build the Docker image
+                    sh 'docker build -t my-flask-app .'
                 }
             }
         }
-        stage('Run') {
+        
+        stage('Deploy') {
             steps {
-                // Run Docker container
                 script {
-                    docker.image("${DOCKER_IMAGE}").run('-d -p 5000:5000')
+                    // Remove the existing container if it exists
+                    sh 'docker stop my-flask-app || true && docker rm my-flask-app || true'
+
+                    // Run the new container
+                    sh 'docker run -d -p 5000:5000 --name my-flask-app my-flask-app'
                 }
             }
-        }
-    }
-    post {
-        always {
-            // Clean up containers after the pipeline finishes
-            sh 'docker container prune -f'
         }
     }
 }
